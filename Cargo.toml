@@ -14,3 +14,7 @@ bootloader = "0.9.8"
 
 # the profile used for `cargo build --release`
 [profile.release]
+
+[package.metadata.bootimage]
+
+run-command = ["qemu-system-x86_64", "-drive", "format=raw,file=target/x86_64-my_os/debug/bootimage-os.bin", "-L", "c://Program Files/qemu"]
