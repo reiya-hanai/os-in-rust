@@ -8,17 +8,14 @@ mod vga_buffer;
 pub extern "C" fn _start() -> ! {
     // this function is the entry point, since the linker looks for a function
     // named `_start` by default
-    use core::fmt::Write;
-    vga_buffer::WRITER
-        .lock()
-        .write_str("Ohishi Izumi Suki\n Sushi\n")
-        .unwrap();
-    write!(vga_buffer::WRITER.lock(), "Ohishi Izumi Suko").unwrap();
+    println!("Ohishi Izumi {}", "Suki");
+    panic!("Kernel panic due to Ohishi Izumi Suki Suki Problem");
     loop {}
 }
 
 /// This function is called on panic
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
     loop {}
 }
