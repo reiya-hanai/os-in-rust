@@ -117,21 +117,13 @@ impl fmt::Write for Writer {
     }
 }
 
-pub fn print_something() {
-    use core::fmt::Write;
-    let mut writer = Writer {
+use lazy_static::lazy_static;
+use spin::Mutex;
+
+lazy_static! {
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Yellow, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-
-    for i in 0..5 {
-        for _j in 0..i {
-            writer.write_byte(b' ');
-        }
-        writer.write_byte(b'O');
-        writer.write_string("hishi Izumi ");
-        writer.write_string("Suki\n");
-    }
-    write!(writer, "The numbers are {} and {}\n", 42, 1.0 / 3.0).unwrap();
+    });
 }
