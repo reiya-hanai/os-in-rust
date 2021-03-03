@@ -50,7 +50,7 @@ struct Buffer {
 pub struct Writer {
     column_position: usize,
     color_code: ColorCode,
-    buffer: &'static mut Buffer
+    buffer: &'static mut Buffer,
 }
 
 impl Writer {
@@ -75,9 +75,7 @@ impl Writer {
         }
     }
 
-    fn new_line(&mut self) {
-
-    }
+    fn new_line(&mut self) {}
 
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
@@ -95,7 +93,7 @@ pub fn print_something() {
     let mut writer = Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Yellow, Color::Black),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer)},
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     };
 
     writer.write_byte(b'O');
