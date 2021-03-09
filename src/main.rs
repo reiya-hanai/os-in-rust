@@ -1,5 +1,8 @@
 #![no_std] // don't link the Rust standard Library
 #![no_main] // disable all Rust-level entry points
+#![feature(custom_test_frameworks)]
+#![test_runner(crate::test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
 mod vga_buffer;
@@ -9,7 +12,10 @@ pub extern "C" fn _start() -> ! {
     // this function is the entry point, since the linker looks for a function
     // named `_start` by default
     println!("Ohishi Izumi {}", "Suki");
-    panic!("Kernel panic due to Ohishi Izumi Suki Suki Problem");
+
+    #[cfg(test)]
+    test_main();
+
     loop {}
 }
 
@@ -18,4 +24,19 @@ pub extern "C" fn _start() -> ! {
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
     loop {}
+}
+
+#[cfg(test)]
+fn test_runner(tests: &[&dyn Fn()]) {
+    println!("Running {} tests", tests.len());
+    for test in tests {
+        test();
+    }
+}
+
+#[test_case]
+fn trivial_assertion() {
+    print!("trivial assertion... ");
+    assert_eq!(1, 1);
+    println!("[ok]");
 }
