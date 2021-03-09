@@ -23,4 +23,4 @@ features = ["spin_no_std"]
 
 [package.metadata.bootimage]
 
-run-command = ["qemu-system-x86_64", "-drive", "format=raw,file=target/x86_64-my_os/debug/bootimage-os.bin", "-L", "c://Program Files/qemu"]
+run-command = ["qemu-system-x86_64", "-drive", "format=raw,file={}", "-L", "c://Program Files/qemu"]
