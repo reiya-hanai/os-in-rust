@@ -19,10 +19,7 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     println!("It did not crash!");
-    loop {
-        use my_os::print;
-        print!("-");
-    }
+    my_os::hlt_loop();
 }
 
 /// This function is called on panic when non-test execution
@@ -30,7 +27,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    my_os::hlt_loop();
 }
 
 #[cfg(test)]
