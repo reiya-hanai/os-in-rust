@@ -1,11 +1,11 @@
 #![no_std] // don't link the Rust standard Library
 #![no_main] // disable all Rust-level entry points
 #![feature(custom_test_frameworks)]
-#![test_runner(os::test_runner)]
+#![test_runner(my_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use os::println;
+use my_os::println;
 
 #[no_mangle] // don't mangle the name of this function
 pub extern "C" fn _start() -> ! {
@@ -13,7 +13,7 @@ pub extern "C" fn _start() -> ! {
     // named `_start` by default
     println!("Ohishi Izumi {}", "Suki");
 
-    os::init();
+    my_os::init();
 
     // invoke a breakpoint exception
     x86_64::instructions::interrupts::int3();
@@ -36,7 +36,7 @@ fn panic(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    os::test_panic_handler(info);
+    my_os::test_panic_handler(info);
 }
 
 /* ---- TEST SUITE ---- */
