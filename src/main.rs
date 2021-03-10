@@ -15,8 +15,10 @@ pub extern "C" fn _start() -> ! {
 
     my_os::init();
 
-    // invoke a breakpoint exception
-    x86_64::instructions::interrupts::int3();
+    // invoke a double fault exception
+    unsafe {
+        *(0xdeadbeef as *mut u64) = 42;
+    }
 
     #[cfg(test)]
     test_main();
