@@ -15,11 +15,6 @@ pub extern "C" fn _start() -> ! {
 
     my_os::init();
 
-    // invoke a double fault exception
-    unsafe {
-        *(0xdeadbeef as *mut u64) = 42;
-    }
-
     #[cfg(test)]
     test_main();
 
