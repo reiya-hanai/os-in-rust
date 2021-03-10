@@ -4,16 +4,20 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
+#![feature(const_fn)]
+#![feature(const_fn_fn_ptr_basics)]
 
 use core::panic::PanicInfo;
 pub mod gdt;
 pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
+pub mod mouse;
 
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    interrupts::init_mouse();
     unsafe { interrupts::PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable();
 }

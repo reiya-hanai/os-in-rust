@@ -1,4 +1,5 @@
 use crate::gdt;
+use crate::mouse;
 use crate::println;
 use lazy_static::lazy_static;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
@@ -14,6 +15,7 @@ lazy_static! {
         }
         idt[InterruptIndex::Timer.as_usize()].set_handler_fn(timer_interrupt_handler);
         idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
+        idt[InterruptIndex::Mouse.as_usize()].set_handler_fn(mouse_interrupt_handler);
 
         idt
     };
@@ -73,6 +75,34 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: &mut Interrup
     }
 }
 
+use mouse::{Mouse, MouseState};
+use spin::Mutex;
+lazy_static! {
+    static ref MOUSE: Mutex<Mouse> = Mutex::new(Mouse::new());
+}
+
+pub fn init_mouse() {
+    MOUSE.lock().init().expect("Mouse initialization failure");
+    MOUSE.lock().set_on_complete(mouse_on_complete);
+}
+
+extern "x86-interrupt" fn mouse_interrupt_handler(_stack_frame: &mut InterruptStackFrame) {
+    use x86_64::instructions::port::PortReadOnly;
+
+    let mut port = PortReadOnly::new(0x60);
+    let packet: u8 = unsafe { port.read() };
+    MOUSE.lock().process_packet(packet);
+
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::Mouse.as_u8());
+    }
+}
+
+fn mouse_on_complete(_mouse_state: MouseState) {
+    // println!("{:?}", mouse_state);
+}
+
 use pic8259_simple::ChainedPics;
 use spin;
 
@@ -86,7 +116,8 @@ pub static PICS: spin::Mutex<ChainedPics> =
 #[repr(u8)]
 pub enum InterruptIndex {
     Timer = PIC_1_OFFSET,
-    Keyboard,
+    Keyboard = PIC_1_OFFSET + 1,
+    Mouse = PIC_1_OFFSET + 12,
 }
 
 impl InterruptIndex {

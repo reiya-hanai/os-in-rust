@@ -39,6 +39,7 @@ dependencies = [
 name = "my_os"
 version = "0.1.0"
 dependencies = [
+ "bitflags",
  "bootloader",
  "lazy_static",
  "pc-keyboard",
