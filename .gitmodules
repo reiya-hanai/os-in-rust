@@ -1,0 +1,3 @@
+[submodule "ps2-mouse"]
+	path = ps2-mouse
+	url = https://github.com/rust-osdev/ps2-mouse.git
