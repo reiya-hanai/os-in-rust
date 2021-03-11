@@ -14,7 +14,10 @@ x86_64 = "0.13.2"
 uart_16550 = "0.2.0"
 pic8259_simple = "0.2.0"
 pc-keyboard = "0.5.0"
-bitflags = "1.2.1"
+ps2-mouse = "0.1.3"
+
+[patch.crates-io]
+ps2-mouse = {path = "./ps2-mouse"}
 
 [dependencies.lazy_static]
 version = "1.0"

@@ -1,5 +1,4 @@
 use crate::gdt;
-use crate::mouse;
 use crate::println;
 use lazy_static::lazy_static;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
@@ -75,7 +74,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: &mut Interrup
     }
 }
 
-use mouse::{Mouse, MouseState};
+use ps2_mouse::{Mouse, MouseState};
 use spin::Mutex;
 lazy_static! {
     static ref MOUSE: Mutex<Mouse> = Mutex::new(Mouse::new());
